@@ -18,7 +18,7 @@
     </button>
     <button
       @click="toggleFavorite"
-      class="mt-2 bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded"
+      class="mt-4 bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded"
     >
       {{ isFavorite(joke) ? "★ Remove from Favorites" : "☆ Add to Favorites" }}
     </button>

@@ -10,23 +10,42 @@
       <div
         v-for="joke in favorites"
         :key="joke.id"
-        class="p-4 bg-white rounded-xl shadow-lg border border-gray-300"
+        class="p-4 bg-white rounded-xl shadow-lg border border-gray-300 h-full flex flex-col justify-between"
       >
         <p class="font-semibold text-lg">{{ joke.setup }}</p>
-        <p class="text-gray-600 mt-2">{{ joke.punchline }}</p>
-        <button
-          @click="removeFromFavorites(joke)"
-          class="mt-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+        <p
+          class="text-gray-600 mt-2 transition duration-300"
+          :class="{
+            'blur-sm cursor-pointer': !revealedPunchlines.has(joke.id),
+          }"
+          @mouseenter="reveal(joke.id)"
         >
-          Remove
-        </button>
+          {{ joke.punchline }}
+        </p>
+
+        <!-- <p class="text-gray-600 mt-2">{{ joke.punchline }}</p> -->
+        <div class="flex justify-center mt-4">
+          <button
+            @click="removeFromFavorites(joke)"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Remove
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useJokes } from "../composables/useJokes";
 
 const { favorites, removeFromFavorites } = useJokes();
+
+const revealedPunchlines = ref(new Set());
+
+const reveal = (id) => {
+  revealedPunchlines.value.add(id);
+};
 </script>
