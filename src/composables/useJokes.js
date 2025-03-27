@@ -1,11 +1,21 @@
 import { ref } from "vue";
 
-export function useJokes() {
-  const joke = ref(null);
-  const loading = ref(false);
-  const error = ref(null);
-  const jokeType = ref("random");
+const joke = ref(null);
+const loading = ref(false);
+const error = ref(null);
+const jokeType = ref("random");
+const favorites = ref([]);
 
+const stored = localStorage.getItem("favorites");
+if (stored) {
+  try {
+    favorites.value = JSON.parse(stored);
+  } catch (e) {
+    console.error("Failed to parse favorites from localStorage");
+  }
+}
+
+export function useJokes() {
   const fetchJoke = async () => {
     loading.value = true;
     error.value = null;
@@ -33,6 +43,26 @@ export function useJokes() {
     jokeType.value = jokeType.value === "random" ? "programming" : "random";
   };
 
+  const saveFavorites = () => {
+    localStorage.setItem("favorites", JSON.stringify(favorites.value));
+  };
+
+  const addToFavorites = (j) => {
+    if (!isFavorite(j)) {
+      favorites.value = [...favorites.value, j];
+      saveFavorites();
+    }
+  };
+
+  const removeFromFavorites = (j) => {
+    favorites.value = favorites.value.filter((fav) => fav.id !== j.id);
+    saveFavorites();
+  };
+
+  const isFavorite = (j) => {
+    return favorites.value.some((fav) => fav.id === j.id);
+  };
+
   return {
     joke,
     loading,
@@ -40,5 +70,9 @@ export function useJokes() {
     jokeType,
     fetchJoke,
     toggleJokeType,
+    favorites,
+    addToFavorites,
+    removeFromFavorites,
+    isFavorite,
   };
 }
