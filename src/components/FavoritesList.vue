@@ -7,13 +7,30 @@
       placeholder="Search jokes..."
       class="mb-6 w-full p-2 border border-gray-300 rounded"
     />
-    <select
-      v-model="minRating"
-      class="mb-6 w-full p-2 border border-gray-300 rounded"
-    >
-      <option value="0">All Ratings</option>
-      <option v-for="r in 5" :key="r" :value="r">Rated {{ r }} ⭐ & up</option>
-    </select>
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <div class="w-full md:w-1/2">
+        <select
+          v-model="minRating"
+          class="w-full p-2 border border-gray-300 rounded"
+        >
+          <option value="0">All Ratings</option>
+          <option v-for="r in 5" :key="r" :value="r">
+            Rated {{ r }} ⭐ & up
+          </option>
+        </select>
+      </div>
+      <div class="w-full md:w-1/2">
+        <select
+          v-model="sortBy"
+          class="w-full p-2 border border-gray-300 rounded"
+        >
+          <option value="">Unsorted</option>
+          <option value="alpha">Alphabetically</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
+    </div>
+
     <div
       v-if="filteredFavorites.length === 0"
       class="text-gray-500 text-center"
@@ -64,6 +81,14 @@
         </div>
       </div>
     </div>
+    <div class="mt-8 text-center" v-if="filteredFavorites.length">
+      <p class="text-lg font-semibold">
+        Total: {{ filteredFavorites.length }} jokes
+      </p>
+      <p class="text-lg font-semibold" v-if="averageRating !== null">
+        Average rating: {{ averageRating.toFixed(1) }} ⭐
+      </p>
+    </div>
   </div>
 </template>
 
@@ -90,17 +115,30 @@ const clearHover = (id) => {
   hoveredRating.value[id] = null;
 };
 
-const filteredFavorites = computed(() => {
-  return favorites.value.filter((joke) => {
-    const matchesSearch = joke.setup
-      .toLowerCase()
-      .includes(searchTerm.value.toLowerCase());
-    // ||
-    // joke.punchline.toLowerCase().includes(searchTerm.value.toLowerCase())
-    const meetsRating =
-      minRating.value === 0 || (joke.rating ?? 0) >= minRating.value;
+const sortBy = ref("");
 
-    return matchesSearch && meetsRating;
-  });
+const filteredFavorites = computed(() => {
+  return favorites.value
+    .filter((joke) => {
+      return (
+        joke.setup.toLowerCase().includes(searchTerm.value.toLowerCase()) &&
+        (minRating.value === 0 || joke.rating >= minRating.value)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy.value === "alpha") {
+        return a.setup.localeCompare(b.setup);
+      } else if (sortBy.value === "rating") {
+        return b.rating - a.rating;
+      }
+      return 0;
+    });
+});
+
+const averageRating = computed(() => {
+  const rated = filteredFavorites.value.filter((j) => j.rating !== null);
+  if (rated.length === 0) return null;
+  const sum = rated.reduce((acc, j) => acc + j.rating, 0);
+  return sum / rated.length;
 });
 </script>
