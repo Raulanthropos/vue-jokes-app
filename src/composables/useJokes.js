@@ -63,6 +63,14 @@ export function useJokes() {
     return favorites.value.some((fav) => fav.id === j.id);
   };
 
+  const rateJoke = (id, rating) => {
+    const joke = favorites.value.find((j) => j.id === id);
+    if (joke) {
+      joke.rating = rating;
+      saveFavorites();
+    }
+  };
+
   return {
     joke,
     loading,
@@ -74,5 +82,6 @@ export function useJokes() {
     addToFavorites,
     removeFromFavorites,
     isFavorite,
+    rateJoke,
   };
 }

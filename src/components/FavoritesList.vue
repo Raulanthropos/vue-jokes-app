@@ -22,8 +22,22 @@
         >
           {{ joke.punchline }}
         </p>
-
-        <!-- <p class="text-gray-600 mt-2">{{ joke.punchline }}</p> -->
+        <div class="flex justify-center mt-2">
+          <span
+            v-for="r in 5"
+            :key="r"
+            class="cursor-pointer text-2xl transition"
+            :class="[
+              (hoveredRating[joke.id] ?? joke.rating) >= r
+                ? 'text-yellow-400'
+                : 'text-gray-600',
+            ]"
+            @mouseover="setHover(joke.id, r)"
+            @mouseleave="clearHover(joke.id)"
+            @click="rateJoke(joke.id, r)"
+            >★</span
+          >
+        </div>
         <div class="flex justify-center mt-4">
           <button
             @click="removeFromFavorites(joke)"
@@ -41,11 +55,20 @@
 import { ref } from "vue";
 import { useJokes } from "../composables/useJokes";
 
-const { favorites, removeFromFavorites } = useJokes();
+const { favorites, removeFromFavorites, rateJoke } = useJokes();
 
 const revealedPunchlines = ref(new Set());
+const hoveredRating = ref({});
 
 const reveal = (id) => {
   revealedPunchlines.value.add(id);
+};
+
+const setHover = (id, value) => {
+  hoveredRating.value[id] = value;
+};
+
+const clearHover = (id) => {
+  hoveredRating.value[id] = null;
 };
 </script>
