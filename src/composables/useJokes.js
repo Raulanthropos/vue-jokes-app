@@ -9,7 +9,11 @@ const favorites = ref([]);
 const stored = localStorage.getItem("favorites");
 if (stored) {
   try {
-    favorites.value = JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    favorites.value = parsed.map((joke) => ({
+      ...joke,
+      rating: joke.rating ?? null,
+    }));
   } catch (e) {
     console.error("Failed to parse favorites from localStorage");
   }
@@ -49,7 +53,8 @@ export function useJokes() {
 
   const addToFavorites = (j) => {
     if (!isFavorite(j)) {
-      favorites.value = [...favorites.value, j];
+      const jokeWithRating = { ...j, rating: null };
+      favorites.value = [...favorites.value, jokeWithRating];
       saveFavorites();
     }
   };
@@ -63,6 +68,14 @@ export function useJokes() {
     return favorites.value.some((fav) => fav.id === j.id);
   };
 
+  const rateJoke = (id, rating) => {
+    const joke = favorites.value.find((j) => j.id === id);
+    if (joke) {
+      joke.rating = rating;
+      saveFavorites();
+    }
+  };
+
   return {
     joke,
     loading,
@@ -74,5 +87,6 @@ export function useJokes() {
     addToFavorites,
     removeFromFavorites,
     isFavorite,
+    rateJoke,
   };
 }
