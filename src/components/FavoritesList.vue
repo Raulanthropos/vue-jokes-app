@@ -7,7 +7,13 @@
       placeholder="Search jokes..."
       class="mb-6 w-full p-2 border border-gray-300 rounded"
     />
-
+    <select
+      v-model="minRating"
+      class="mb-6 w-full p-2 border border-gray-300 rounded"
+    >
+      <option value="0">All Ratings</option>
+      <option v-for="r in 5" :key="r" :value="r">Rated {{ r }} ⭐ & up</option>
+    </select>
     <div
       v-if="filteredFavorites.length === 0"
       class="text-gray-500 text-center"
@@ -37,7 +43,7 @@
             :key="r"
             class="cursor-pointer text-2xl transition"
             :class="[
-              (hoveredRating[joke.id] ?? joke.rating) >= r
+              (hoveredRating[joke.id] ?? joke.rating ?? 0) >= r
                 ? 'text-yellow-400'
                 : 'text-gray-300',
             ]"
@@ -70,6 +76,7 @@ const { favorites, removeFromFavorites, rateJoke } = useJokes();
 const revealedPunchlines = ref(new Set());
 const hoveredRating = ref({});
 const searchTerm = ref("");
+const minRating = ref(0);
 
 const reveal = (id) => {
   revealedPunchlines.value.add(id);
@@ -84,10 +91,16 @@ const clearHover = (id) => {
 };
 
 const filteredFavorites = computed(() => {
-  return favorites.value.filter(
-    (joke) => joke.setup.toLowerCase().includes(searchTerm.value.toLowerCase())
+  return favorites.value.filter((joke) => {
+    const matchesSearch = joke.setup
+      .toLowerCase()
+      .includes(searchTerm.value.toLowerCase());
     // ||
     // joke.punchline.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
+    const meetsRating =
+      minRating.value === 0 || (joke.rating ?? 0) >= minRating.value;
+
+    return matchesSearch && meetsRating;
+  });
 });
 </script>
