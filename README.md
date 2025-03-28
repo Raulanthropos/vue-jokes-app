@@ -22,6 +22,10 @@ A Vue 3 app that lets users fetch, view, and manage their favorite jokes — wit
 - [Vite](https://vitejs.dev/)
 - [TailwindCSS](https://tailwindcss.com/)
 
+## API
+
+This project uses the [Official Joke API](https://github.com/15Dkatz/official_joke_api) by [15Dkatz](https://github.com/15Dkatz).
+
 ## Setup Instructions
 
 1. Clone the repo:
