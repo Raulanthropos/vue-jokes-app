@@ -3,7 +3,7 @@
 A Vue 3 app that lets users fetch, view, and manage their favorite jokes — with category switching, localStorage persistence, star ratings, filtering, sorting, and discreet punchline effects.
 
 ## Live Demo
-👉 [Joke Collection App](joke-app.vercel.app)
+👉 [Joke Collection App](https://vue-jokes-app.vercel.app/)
 
 ## Features
 
