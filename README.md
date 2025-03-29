@@ -2,12 +2,15 @@
 
 A Vue 3 app that lets users fetch, view, and manage their favorite jokes — with category switching, localStorage persistence, star ratings, filtering, sorting, and discreet punchline effects.
 
+## Live Demo
+👉 [Joke Collection App](joke-app.vercel.app)
+
 ## Features
 
 - Fetch random or programming jokes via API
 - Reveal/hide punchlines
 - Add/remove jokes from favorites
-- LocalStorage persistence for favorites
+- localStorage persistence for favorites
 - Star rating system (1–5 ⭐)
 - Search through favorites
 - Filter favorites by rating
@@ -31,7 +34,7 @@ This project uses the [Official Joke API](https://github.com/15Dkatz/official_jo
 1. Clone the repo:
 
 ```bash
-git clone https://github.com/your-username/vue-jokes-app.git
+git clone https://github.com/Raulanthropos/vue-jokes-app.git
 cd vue-jokes-app
 ```
 
