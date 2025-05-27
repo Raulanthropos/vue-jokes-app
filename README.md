@@ -73,4 +73,3 @@ npm run dev
 - All joke data is fetched from [Official Joke API](https://official-joke-api.appspot.com/).
 - This project is built using the Composition API.
 - localStorage is used to persist your favorites even after a refresh or revisit.
-- Although I’m familiar with TypeScript, I chose not to use it in this project as I haven’t worked with it recently.
